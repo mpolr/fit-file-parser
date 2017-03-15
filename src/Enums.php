@@ -434,6 +434,7 @@ class SubSport {
     const match                 = 22;   // Tennis
     const exercise              = 23;   // Tennis
     const challenge             = 24;   // Tennis
+    const indoor_skiing         = 25;   // Fitness Equipment
     const all                   = 254;
 }
 class TimerTrigger {
