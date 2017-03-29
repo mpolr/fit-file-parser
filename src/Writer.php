@@ -84,14 +84,14 @@ class Writer extends \Fit\Core {
 		$offset = $this->writer->getOffset();
 		//move to header and write the size of the data
 		$this->writer->setOffset(4);
-		$data_size = $this->writer->getSize() - 14;
+		$data_size = $this->writer->getSize() - 12;
 		$this->writer->writeUInt32LE($data_size);	// Does not include file header or crc.  Little endian format.
 		//write 2 byte crc check at end of file
 		$this->writer->setOffset($offset);
 		$this->writer->writeUInt16LE(0);
 		return $this;
 	}
-	
+
 	/**
 	 * Writes the Fit file header to the file.
 	 * @return \Fit\Writer
