@@ -1,5 +1,7 @@
 <?php
+
 namespace Fit;
+
 /**
  * @author Karel Wesseling <karel@swc.nl>
  * @version 1.0
@@ -249,12 +251,12 @@ class Reader extends \Fit\Core
                     $field_factor   = (double)$profile_field_def[\Fit\Field::FACTOR];
                     $field_unit     = $profile_field_def[\Fit\Field::UNIT];
                 } else {
-                    $field_name     = 'no:'.$field_def['field_def_number'];
+                    $field_name     = 'no:' . $field_def['field_def_number'];
                     $field_factor   = 1;
                     $field_unit     = '';
                 }
 
-                switch($field_def['base_type']['base_type_definition']['name']) {
+                switch ($field_def['base_type']['base_type_definition']['name']) {
                     case 'string':
                         $value = $this->reader->readString8($field_def['size']);
                         break;

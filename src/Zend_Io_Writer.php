@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Zend Framework
  *
@@ -66,11 +67,12 @@ class Zend_Io_Writer
      */
     public function __construct($fd)
     {
-        if (!is_resource($fd) ||
-                !in_array(get_resource_type($fd), array('stream'))) {
+        if (
+            !is_resource($fd) ||
+                !in_array(get_resource_type($fd), array('stream'))
+        ) {
             require_once('Zend/Io/Exception.php');
-            throw new Zend_Io_Exception
-                ('Invalid resource type (only resources of type stream are supported)');
+            throw new Zend_Io_Exception('Invalid resource type (only resources of type stream are supported)');
         }
 
         $this->_fd = $fd;
@@ -84,7 +86,9 @@ class Zend_Io_Writer
     /**
      * Default destructor.
      */
-    public function __destruct() {}
+    public function __destruct()
+    {
+    }
 
     /**
      * Returns the current point of operation.
@@ -190,7 +194,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeInt8($value)
+    final public function writeInt8($value)
     {
         return $this->write(pack('c*', $value));
     }
@@ -202,7 +206,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeUInt8($value)
+    final public function writeUInt8($value)
     {
         return $this->write(pack('C*', $value));
     }
@@ -226,7 +230,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeInt16LE($value)
+    final public function writeInt16LE($value)
     {
         if ($this->_isLittleEndian()) {
             return $this->write(strrev($this->_toInt16($value)));
@@ -243,7 +247,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeInt16BE($value)
+    final public function writeInt16BE($value)
     {
         if ($this->_isBigEndian()) {
             return $this->write(strrev($this->_toInt16($value)));
@@ -260,7 +264,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeUInt16LE($value)
+    final public function writeUInt16LE($value)
     {
         return $this->write(pack('v*', $value));
     }
@@ -273,10 +277,10 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeUInt16BE($value)
+    final public function writeUInt16BE($value)
     {
-       return $this->write(pack('n*', $value));
-     }
+        return $this->write(pack('n*', $value));
+    }
 
     /**
      * Returns signed 32-bit integer as machine-endian ordered binary data.
@@ -284,7 +288,7 @@ class Zend_Io_Writer
      * @param integer $value The input value.
      * @return string
      */
-    private final function _toInt32($value)
+    final private function _toInt32($value)
     {
         return pack('l*', $value);
     }
@@ -297,7 +301,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeInt32LE($value)
+    final public function writeInt32LE($value)
     {
         if ($this->_isLittleEndian()) {
             return $this->write(strrev($this->_toInt32($value)));
@@ -314,7 +318,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeInt32BE($value)
+    final public function writeInt32BE($value)
     {
         if ($this->_isBigEndian()) {
             return $this->write(strrev($this->_toInt32($value)));
@@ -331,7 +335,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeUInt32LE($value)
+    final public function writeUInt32LE($value)
     {
         return $this->write(pack('V*', $value));
     }
@@ -344,7 +348,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeUInt32BE($value)
+    final public function writeUInt32BE($value)
     {
         return $this->write(pack('N*', $value));
     }
@@ -357,10 +361,9 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeInt64LE($value)
+    final public function writeInt64LE($value)
     {
-        return $this->write
-            (pack('V*', $value & 0xffffffff, $value / (0xffffffff+1)));
+        return $this->write(pack('V*', $value & 0xffffffff, $value / (0xffffffff + 1)));
     }
 
     /**
@@ -371,10 +374,9 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeInt64BE($value)
+    final public function writeInt64BE($value)
     {
-        return $this->write
-            (pack('N*', $value / (0xffffffff+1), $value & 0xffffffff));
+        return $this->write(pack('N*', $value / (0xffffffff + 1), $value & 0xffffffff));
     }
 
     /**
@@ -396,7 +398,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeFloatLE($value)
+    final public function writeFloatLE($value)
     {
         if ($this->_isLittleEndian()) {
             return $this->write(strrev($this->_toFloat($value)));
@@ -413,7 +415,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeFloatBE($value)
+    final public function writeFloatBE($value)
     {
         if ($this->_isBigEndian()) {
             return $this->write(strrev($this->_toFloat($value)));
@@ -433,7 +435,7 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeString8($value, $length = null, $padding = "\0")
+    final public function writeString8($value, $length = null, $padding = "\0")
     {
         if ($length === null) {
             $length = strlen($value);
@@ -461,22 +463,29 @@ class Zend_Io_Writer
      * @return string
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeString16
-        ($value, $order = null, $length = null, $padding = "\0")
-    {
+    final public function writeString16(
+        $value,
+        $order = null,
+        $length = null,
+        $padding = "\0"
+    ) {
         if ($length === null) {
             $length = (int)(strlen($value) / 2);
         }
         if ($length < ($tmp = strlen($value) / 2)) {
             $length = $tmp + $length;
         }
-        if ($order == self::BIG_ENDIAN_ORDER &&
-                !(ord($value[0]) == 0xfe && ord($value[1]) == 0xff)) {
+        if (
+            $order == self::BIG_ENDIAN_ORDER &&
+                !(ord($value[0]) == 0xfe && ord($value[1]) == 0xff)
+        ) {
             $value = 0xfeff . $value;
             $length++;
         }
-        if ($order == self::LITTLE_ENDIAN_ORDER &&
-                !(ord($value[0]) == 0xff && ord($value[1]) == 0xfe)) {
+        if (
+            $order == self::LITTLE_ENDIAN_ORDER &&
+                !(ord($value[0]) == 0xff && ord($value[1]) == 0xfe)
+        ) {
             $value = 0xfffe . $value;
             $length++;
         }
@@ -492,7 +501,7 @@ class Zend_Io_Writer
      * @throws Zend_Io_Exception if <var>length</var> attribute is negative or
      *  if the stream is closed
      */
-    public final function writeHHex($value)
+    final public function writeHHex($value)
     {
         return $this->write(pack('H*', $value));
     }
@@ -506,7 +515,7 @@ class Zend_Io_Writer
      * @throws Zend_Io_Exception if <var>length</var> attribute is negative or
      *  if the stream is closed
      */
-    public final function writeLHex($value)
+    final public function writeLHex($value)
     {
         return $this->write(pack('h*', $value));
     }
@@ -519,14 +528,18 @@ class Zend_Io_Writer
      * @return Zend_Io_Writer
      * @throws Zend_Io_Exception if the stream is closed
      */
-    public final function writeGuid($value)
+    final public function writeGuid($value)
     {
         $string = '';
         $C = preg_split('/-/', $value);
-        return $this->write
-            (pack
-             ('V1v2N2', hexdec($C[0]), hexdec($C[1]), hexdec($C[2]),
-              hexdec($C[3] . substr($C[4], 0, 4)), hexdec(substr($C[4], 4))));
+        return $this->write(pack(
+            'V1v2N2',
+            hexdec($C[0]),
+            hexdec($C[1]),
+            hexdec($C[2]),
+            hexdec($C[3] . substr($C[4], 0, 4)),
+            hexdec(substr($C[4], 4))
+        ));
     }
 
     /**
@@ -603,8 +616,7 @@ class Zend_Io_Writer
     public function __get($name)
     {
         if (method_exists($this, 'get' . ucfirst(strtolower($name)))) {
-            return call_user_func
-                (array($this, 'get' . ucfirst(strtolower($name))));
+            return call_user_func(array($this, 'get' . ucfirst(strtolower($name))));
         } else {
             require_once('Zend/Io/Exception.php');
             throw new Zend_Io_Exception('Unknown field: ' . $name);
@@ -621,8 +633,10 @@ class Zend_Io_Writer
     public function __set($name, $value)
     {
         if (method_exists($this, 'set' . ucfirst(strtolower($name)))) {
-            call_user_func
-                (array($this, 'set' . ucfirst(strtolower($name))), $value);
+            call_user_func(
+                array($this, 'set' . ucfirst(strtolower($name))),
+                $value
+            );
         } else {
             require_once('Zend/Io/Exception.php');
             throw new Zend_Io_Exception('Unknown field: ' . $name);
@@ -630,5 +644,7 @@ class Zend_Io_Writer
     }
 }
 if (false === class_exists('Zend_Io_Exception', false)) {
-	class Zend_Io_Exception extends Exception {}
+    class Zend_Io_Exception extends Exception
+    {
+    }
 }

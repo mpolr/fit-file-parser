@@ -1,7 +1,8 @@
 <?php
+
 namespace Fit;
 
-require_once __DIR__.'/Enums.php';
+require_once __DIR__ . '/Enums.php';
 /**
  * @author Karel Wesseling <karel@swc.nl>
  * @version 1.0

@@ -1,13 +1,15 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: patrick
  * Date: 11/15/14
  * Time: 4:55 PM
  */
+
 //Create some data, always set a message 'file_id'.
 $time = time() - mktime(0, 0, 0, 12, 31, 1989);
-$data = new \Fit\Data;
+$data = new \Fit\Data();
 $data->setFile(\Fit\FileType::activity);
 $data
     ->add('file_id', array(

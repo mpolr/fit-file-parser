@@ -1,7 +1,8 @@
 <?php
+
 namespace Fit;
 
-require_once __DIR__.'/Enums.php';
+require_once __DIR__ . '/Enums.php';
 /**
  * @author Karel Wesseling <karel@swc.nl>
  * @version 1.0
@@ -80,10 +81,13 @@ abstract class Core
      * @param int $x
      * @return bool[]
      */
-    public static function inttobar($x){
+    public static function inttobar($x)
+    {
         return array_reverse(
             array_map(
-                function($v) {return (bool)$v;}, 
+                function ($v) {
+                    return (bool)$v;
+                },
                 str_split(str_pad(decbin($x), 16, '0', STR_PAD_LEFT))
             )
         );
@@ -97,7 +101,7 @@ abstract class Core
     public static function bartoint($bs)
     {
         $x = 0;
-        for ($i = 0; $i <= sizeOf($bs)-1; $i++) {
+        for ($i = 0; $i <= sizeOf($bs) - 1; $i++) {
             if ($bs[$i] == true) {
                 $x = $x + pow(2, $i);
             }

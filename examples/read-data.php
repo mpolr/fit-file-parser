@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: patrick
  * Date: 11/15/14
  * Time: 4:59 PM
  */
+
 $filepath = 'data/23876840249.fit';
 
 //Read the data that was just created

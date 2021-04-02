@@ -1,4 +1,5 @@
 <?php
+
 namespace Fit;
 
 function integerToBinaryString($integer, $length)

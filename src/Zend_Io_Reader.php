@@ -1,4 +1,5 @@
 <?php
+
 namespace Fit;
 
 /**
@@ -69,10 +70,11 @@ class Zend_Io_Reader implements IoReader
      */
     public function __construct($fd)
     {
-        if (!is_resource($fd) ||
-            !in_array(get_resource_type($fd), array('stream'))) {
-            throw new \Zend_Io_Exception
-                ('Invalid resource type (only resources of type stream are supported)');
+        if (
+            !is_resource($fd) ||
+            !in_array(get_resource_type($fd), array('stream'))
+        ) {
+            throw new \Zend_Io_Exception('Invalid resource type (only resources of type stream are supported)');
         }
 
         $this->_fd = $fd;
@@ -86,7 +88,9 @@ class Zend_Io_Reader implements IoReader
     /**
      * Default destructor.
      */
-    public function __destruct() {}
+    public function __destruct()
+    {
+    }
 
     /**
      * Checks whether there is more to be read from the stream. Returns
@@ -202,7 +206,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt8()
+    final public function readInt8()
     {
         $ord = ord($this->read(1));
         if ($ord > 127) {
@@ -219,7 +223,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt8()
+    final public function readUInt8()
     {
         return ord($this->read(1));
     }
@@ -243,7 +247,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt16LE()
+    final public function readInt16LE()
     {
         if ($this->_isBigEndian()) {
             return $this->_fromInt16(strrev($this->read(2)));
@@ -259,7 +263,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt16BE()
+    final public function readInt16BE()
     {
         if ($this->_isLittleEndian()) {
             return $this->_fromInt16(strrev($this->read(2)));
@@ -275,7 +279,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt16()
+    final public function readInt16()
     {
         return $this->_fromInt16($this->read(2));
     }
@@ -289,10 +293,11 @@ class Zend_Io_Reader implements IoReader
      */
     private function _fromUInt16($value, $order = 0)
     {
-        list(, $int) = unpack
-            (($order == self::BIG_ENDIAN_ORDER ? 'n' :
+        list(, $int) = unpack(
+            ($order == self::BIG_ENDIAN_ORDER ? 'n' :
                 ($order == self::LITTLE_ENDIAN_ORDER ? 'v' : 'S')) . '*',
-             $value);
+            $value
+        );
         return $int;
     }
 
@@ -303,7 +308,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt16LE()
+    final public function readUInt16LE()
     {
         return $this->_fromUInt16($this->read(2), self::LITTLE_ENDIAN_ORDER);
     }
@@ -315,7 +320,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt16BE()
+    final public function readUInt16BE()
     {
         return $this->_fromUInt16($this->read(2), self::BIG_ENDIAN_ORDER);
     }
@@ -327,7 +332,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt16()
+    final public function readUInt16()
     {
         return $this->_fromUInt16($this->read(2), self::MACHINE_ENDIAN_ORDER);
     }
@@ -351,7 +356,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt24LE()
+    final public function readInt24LE()
     {
         if ($this->_isBigEndian()) {
             return $this->_fromInt24(strrev($this->read(3)));
@@ -367,7 +372,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt24BE()
+    final public function readInt24BE()
     {
         if ($this->_isLittleEndian()) {
             return $this->_fromInt24(strrev($this->read(3)));
@@ -383,7 +388,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt24()
+    final public function readInt24()
     {
         return $this->_fromInt24($this->read(3));
     }
@@ -397,10 +402,11 @@ class Zend_Io_Reader implements IoReader
      */
     private function _fromUInt24($value, $order = 0)
     {
-        list(, $int) = unpack
-            (($order == self::BIG_ENDIAN_ORDER ? 'N' :
+        list(, $int) = unpack(
+            ($order == self::BIG_ENDIAN_ORDER ? 'N' :
                 ($order == self::LITTLE_ENDIAN_ORDER ? 'V' : 'L')) . '*',
-             $this->_isLittleEndian() ? ("\x00" . $value) : ($value . "\x00"));
+            $this->_isLittleEndian() ? ("\x00" . $value) : ($value . "\x00")
+        );
         return $int;
     }
 
@@ -411,7 +417,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt24LE()
+    final public function readUInt24LE()
     {
         return $this->_fromUInt24($this->read(3), self::LITTLE_ENDIAN_ORDER);
     }
@@ -423,7 +429,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt24BE()
+    final public function readUInt24BE()
     {
         return $this->_fromUInt24($this->read(3), self::BIG_ENDIAN_ORDER);
     }
@@ -435,7 +441,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt24()
+    final public function readUInt24()
     {
         return $this->_fromUInt24($this->read(3), self::MACHINE_ENDIAN_ORDER);
     }
@@ -446,7 +452,7 @@ class Zend_Io_Reader implements IoReader
      * @param string $value The binary data string.
      * @return integer
      */
-    private final function _fromInt32($value)
+    final private function _fromInt32($value)
     {
         list(, $int) = unpack('l*', $value);
         return $int;
@@ -459,12 +465,13 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt32LE()
+    final public function readInt32LE()
     {
-        if ($this->_isBigEndian())
+        if ($this->_isBigEndian()) {
             return $this->_fromInt32(strrev($this->read(4)));
-        else
+        } else {
             return $this->_fromInt32($this->read(4));
+        }
     }
 
     /**
@@ -474,12 +481,13 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt32BE()
+    final public function readInt32BE()
     {
-        if ($this->_isLittleEndian())
+        if ($this->_isLittleEndian()) {
             return $this->_fromInt32(strrev($this->read(4)));
-        else
+        } else {
             return $this->_fromInt32($this->read(4));
+        }
     }
 
     /**
@@ -489,7 +497,7 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt32()
+    final public function readInt32()
     {
         return $this->_fromInt32($this->read(4));
     }
@@ -501,11 +509,11 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt32LE()
+    final public function readUInt32LE()
     {
         if (PHP_INT_SIZE < 8) {
             list(, $lo, $hi) = unpack('v*', $this->read(4));
-            return $hi * (0xffff+1) + $lo; // eq $hi << 16 | $lo
+            return $hi * (0xffff + 1) + $lo; // eq $hi << 16 | $lo
         } else {
             list(, $int) = unpack('V*', $this->read(4));
             return $int;
@@ -519,11 +527,11 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt32BE()
+    final public function readUInt32BE()
     {
         if (PHP_INT_SIZE < 8) {
             list(, $hi, $lo) = unpack('n*', $this->read(4));
-            return $hi * (0xffff+1) + $lo; // eq $hi << 16 | $lo
+            return $hi * (0xffff + 1) + $lo; // eq $hi << 16 | $lo
         } else {
             list(, $int) = unpack('N*', $this->read(4));
             return $int;
@@ -537,11 +545,11 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readUInt32()
+    final public function readUInt32()
     {
         if (PHP_INT_SIZE < 8) {
             list(, $hi, $lo) = unpack('L*', $this->read(4));
-            return $hi * (0xffff+1) + $lo; // eq $hi << 16 | $lo
+            return $hi * (0xffff + 1) + $lo; // eq $hi << 16 | $lo
         } else {
             list(, $int) = unpack('L*', $this->read(4));
             return $int;
@@ -559,11 +567,11 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt64LE()
+    final public function readInt64LE()
     {
         list(, $lolo, $lohi, $hilo, $hihi) = unpack('v*', $this->read(8));
-        return ($hihi * (0xffff+1) + $hilo) * (0xffffffff+1) +
-            ($lohi * (0xffff+1) + $lolo);
+        return ($hihi * (0xffff + 1) + $hilo) * (0xffffffff + 1) +
+            ($lohi * (0xffff + 1) + $lolo);
     }
 
     /**
@@ -577,11 +585,11 @@ class Zend_Io_Reader implements IoReader
      * @return integer
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readInt64BE()
+    final public function readInt64BE()
     {
         list(, $hihi, $hilo, $lohi, $lolo) = unpack('n*', $this->read(8));
-        return ($hihi * (0xffff+1) + $hilo) * (0xffffffff+1) +
-            ($lohi * (0xffff+1) + $lolo);
+        return ($hihi * (0xffff + 1) + $hilo) * (0xffffffff + 1) +
+            ($lohi * (0xffff + 1) + $lolo);
     }
 
     /**
@@ -604,7 +612,7 @@ class Zend_Io_Reader implements IoReader
      * @return float
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readFloatLE()
+    final public function readFloatLE()
     {
         if ($this->_isBigEndian()) {
             return $this->_fromFloat(strrev($this->read(4)));
@@ -620,7 +628,7 @@ class Zend_Io_Reader implements IoReader
      * @return float
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readFloatBE()
+    final public function readFloatBE()
     {
         if ($this->_isLittleEndian()) {
             return $this->_fromFloat(strrev($this->read(4)));
@@ -649,7 +657,7 @@ class Zend_Io_Reader implements IoReader
      * @return float
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readDoubleLE()
+    final public function readDoubleLE()
     {
         if ($this->_isBigEndian()) {
             return $this->_fromDouble(strrev($this->read(8)));
@@ -665,7 +673,7 @@ class Zend_Io_Reader implements IoReader
      * @return float
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readDoubleBE()
+    final public function readDoubleBE()
     {
         if ($this->_isLittleEndian()) {
             return $this->_fromDouble(strrev($this->read(8)));
@@ -684,7 +692,7 @@ class Zend_Io_Reader implements IoReader
      * @throws Zend_Io_Exception if <var>length</var> attribute is negative or
      *  if an I/O error occurs
      */
-    public final function readString8($length, $charList = "\0")
+    final public function readString8($length, $charList = "\0")
     {
         return rtrim($this->read($length), $charList);
     }
@@ -705,9 +713,11 @@ class Zend_Io_Reader implements IoReader
      * @throws Zend_Io_Exception if <var>length</var> attribute is negative or
      *  if an I/O error occurs
      */
-    public final function readString16
-        ($length, &$order = null, $trimOrder = false)
-    {
+    final public function readString16(
+        $length,
+        &$order = null,
+        $trimOrder = false
+    ) {
         $value = $this->read($length);
 
         if (strlen($value) < 2) {
@@ -743,7 +753,7 @@ class Zend_Io_Reader implements IoReader
      * @throws Zend_Io_Exception if <var>length</var> attribute is negative or
      *  if an I/O error occurs
      */
-    public final function readHHex($length)
+    final public function readHHex($length)
     {
         list($hex) = unpack('H*0', $this->read($length));
         return $hex;
@@ -758,7 +768,7 @@ class Zend_Io_Reader implements IoReader
      * @throws Zend_Io_Exception if <var>length</var> attribute is negative or
      *  if an I/O error occurs
      */
-    public final function readLHex($length)
+    final public function readLHex($length)
     {
         list($hex) = unpack('h*0', $this->read($length));
         return $hex;
@@ -771,19 +781,28 @@ class Zend_Io_Reader implements IoReader
      * @return string
      * @throws Zend_Io_Exception if an I/O error occurs
      */
-    public final function readGuid()
+    final public function readGuid()
     {
         $C = @unpack('V1V/v2v/N2N', $this->read(16));
-        list($hex) = @unpack('H*0', pack
-            ('NnnNN', $C['V'], $C['v1'], $C['v2'], $C['N1'], $C['N2']));
+        list($hex) = @unpack('H*0', pack(
+            'NnnNN',
+            $C['V'],
+            $C['v1'],
+            $C['v2'],
+            $C['N1'],
+            $C['N2']
+        ));
 
         /* Fixes a bug in PHP versions earlier than Jan 25 2006 */
         if (implode('', unpack('H*', pack('H*', 'a'))) == 'a00') {
             $hex = substr($hex, 0, -1);
         }
 
-        return preg_replace
-            ('/^(.{8})(.{4})(.{4})(.{4})/', "\\1-\\2-\\3-\\4-", $hex);
+        return preg_replace(
+            '/^(.{8})(.{4})(.{4})(.{4})/',
+            "\\1-\\2-\\3-\\4-",
+            $hex
+        );
     }
 
     /**
@@ -859,8 +878,7 @@ class Zend_Io_Reader implements IoReader
     public function __get($name)
     {
         if (method_exists($this, 'get' . ucfirst(strtolower($name)))) {
-            return call_user_func
-                (array($this, 'get' . ucfirst(strtolower($name))));
+            return call_user_func(array($this, 'get' . ucfirst(strtolower($name))));
         } else {
             throw new Zend_Io_Exception('Unknown field: ' . $name);
         }
@@ -876,13 +894,17 @@ class Zend_Io_Reader implements IoReader
     public function __set($name, $value)
     {
         if (method_exists($this, 'set' . ucfirst(strtolower($name)))) {
-            call_user_func
-                (array($this, 'set' . ucfirst(strtolower($name))), $value);
+            call_user_func(
+                array($this, 'set' . ucfirst(strtolower($name))),
+                $value
+            );
         } else {
             throw new \Zend_Io_Exception('Unknown field: ' . $name);
         }
     }
 }
 if (false === class_exists('Zend_Io_Exception', false)) {
-	class Zend_Io_Exception extends \Exception {}
+    class Zend_Io_Exception extends \Exception
+    {
+    }
 }

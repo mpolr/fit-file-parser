@@ -1,5 +1,7 @@
 <?php
+
 namespace Fit;
+
 /**
  * @author Karel Wesseling <karel@swc.nl>
  * @version 1.0
@@ -25,17 +27,20 @@ namespace Fit;
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-class Activity {
+class Activity
+{
     const manual            = 0;
     const auto_multi_sport  = 1;
 }
 
-class ActivityLevel {
+class ActivityLevel
+{
     const low = 0;
     const medium = 1;
     const high = 2;
 }
-class ActivitySubtype {
+class ActivitySubtype
+{
     const generic  = 0;
     const treadmill = 1;    // Run
     const street = 2;   // Run
@@ -57,11 +62,13 @@ class ActivitySubtype {
     const open_water = 18;  // Swimming
     const all  = 254;
 }
-class Checksum {
+class Checksum
+{
     const clear = 0;
     const ok = 1;
 }
-class CoursePoint {
+class CoursePoint
+{
     const generic  = 0;
     const summit  = 1;
     const valley  = 2;
@@ -87,7 +94,8 @@ class CoursePoint {
     const sharp_right  = 22;
     const u_turn  = 23;
 }
-class DeviceType {
+class DeviceType
+{
     const antfs  = 1;
     const bike_power  = 11;
     const environment_sensor_legacy  = 12;
@@ -106,16 +114,19 @@ class DeviceType {
     const bike_speed  = 123;
     const stride_speed_distance = 124;
 }
-class DisplayHeart {
+class DisplayHeart
+{
     const bpm = 0;
     const max = 1;
     const reserve = 2;
 }
-class DisplayMeasure {
+class DisplayMeasure
+{
     const metric = 0;
     const statute = 1;
 }
-class DisplayPosition {
+class DisplayPosition
+{
     const degree = 0;   // dd.dddddd
     const degree_minute = 1;    // dddmm.mmm
     const degree_minute_second = 2; // dddmmss
@@ -159,11 +170,13 @@ class DisplayPosition {
     const latvian_grid = 40;    // Latvian Transverse Mercator
     const swedish_ref_99_grid = 41; // Reference Grid 99 TM (Swedish)
 }
-class DisplayPower {
+class DisplayPower
+{
     const watts = 0;
     const percent_ftp = 1;
 }
-class Event {
+class Event
+{
     const timer = 0;    // Group 0. Start / stop_all
     const workout = 3;  // start / stop
     const workout_step = 4; // Start at beginning of workout. Stop at end of each step.
@@ -195,7 +208,8 @@ class Event {
     const sport_point = 33; // marker
     const calibration = 36; // start/stop/marker
 }
-class EventType {
+class EventType
+{
     const start = 0;    //0
     const stop = 1; //1
     const consecutive_depreciated = 2;  //2
@@ -207,7 +221,8 @@ class EventType {
     const stop_disable = 8; //8
     const stop_disable_all = 9; //9
 }
-class Field {
+class Field
+{
     const NAME          = 0;
     const DEF_NUMBER    = 1;
     const FACTOR        = 2;
@@ -215,7 +230,8 @@ class Field {
     const TYPE_NUMBER   = 4;
     const SIZE          = 5;
 }
-class FileType {
+class FileType
+{
     const device = 1;   // Read only, single file. Must be in root directory.
     const settings = 2; // Read/write, single file. Directory=Settings
     const sport = 3;    // Read/write, multiple files, file number = sport type. Directory=Sports
@@ -231,14 +247,16 @@ class FileType {
     const activity_summary = 20;    // Read/erase, multiple files. Directory=Activities
     const monitoring_daily = 2;
 }
-class Goal {
+class Goal
+{
     const time = 0;
     const distance = 1;
     const calories = 2;
     const frequency = 3;
     const steps = 4;
 }
-class Language {
+class Language
+{
     const english  = 0;
     const french  = 1;
     const italian  = 2;
@@ -267,7 +285,8 @@ class Language {
     const romanian  = 25;
     const custom  = 254;
 }
-class Manufacturer {
+class Manufacturer
+{
     const garmin  = 1;
     const garmin_fr405_antfs = 2; // Do not use. Used by FR405 for ANTFS man id.
     const zephyr  = 3;
@@ -343,12 +362,14 @@ class Manufacturer {
     const development  = 255;
     const actigraphcorp = 5759;
 }
-class MesgCount {
+class MesgCount
+{
     const num_per_file = 0;
     const max_per_file = 1;
     const max_per_file_type = 2;
 }
-class MesgNum {
+class MesgNum
+{
     const file_id  = 0;
     const capabilities  = 1;
     const device_settings  = 2;
@@ -390,11 +411,13 @@ class MesgNum {
     const slave_device  = 106;
     const cadence_zone  = 131;
 }
-class Schedule {
+class Schedule
+{
     const workout = 0;
     const course = 1;
 }
-class Sport {
+class Sport
+{
     const generic           = 0;
     const running           = 1;
     const cycling           = 2;
@@ -408,7 +431,8 @@ class Sport {
     const training          = 10;
     const all               = 254;  //All is for goals only to include all sports.
 }
-class SubSport {
+class SubSport
+{
     const generic               = 0;
     const treadmill             = 1;    // Run
     const street                = 2;    // Run
@@ -437,7 +461,8 @@ class SubSport {
     const indoor_skiing         = 25;   // Fitness Equipment
     const all                   = 254;
 }
-class TimerTrigger {
+class TimerTrigger
+{
     const manual = 0;
     const auto = 1;
     const fitness_equipment = 2;
