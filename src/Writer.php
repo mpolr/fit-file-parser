@@ -67,7 +67,7 @@ class Writer extends \Fit\Core
             $this
                 ->writeFileHeader()
                 ->writeTheRecords($data)
-                ->writeFileClosure()
+                ->writeFileClosure($filepath)
             ;
         } catch (\Exception $e) {
             $this->writer->close();
