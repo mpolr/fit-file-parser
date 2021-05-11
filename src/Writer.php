@@ -92,6 +92,7 @@ class Writer extends \Fit\Core
     }
     
     protected function writeFileClosure($filepath) {
+        $crc=0;
         //mark current writing position
         $offset = $this->writer->getOffset();
         //move to header and write the size of the data
@@ -101,7 +102,6 @@ class Writer extends \Fit\Core
             //BEGIN CALCULATE CRC
             $handle = @fopen($filepath, "r");
             if ($handle) {
-                $crc=0;
                 while (!feof($handle)) {
                     $hex = bin2hex(fread ($handle , 1 ));
                     $byte=hexdec('0x'.$hex);
