@@ -97,7 +97,7 @@ class Writer extends \Fit\Core
         $offset = $this->writer->getOffset();
         //move to header and write the size of the data
         $this->writer->setOffset(4); //GO TO 4th POSITION TO WRITE IN DATA SIZE
-        $data_size = $this->writer->getSize() - 14; //WAS MINUS 12
+        $data_size = $this->writer->getSize() - 12; //WAS MINUS 12
         $this->writer->writeUInt32LE($data_size);	// Does not include file header or crc.  Little endian format.
             //BEGIN CALCULATE CRC
             $handle = @fopen($filepath, "r");
