@@ -362,6 +362,7 @@ class Manufacturer
     const peripedal  = 72;
     const moxy  = 76;
     const development  = 255;
+    const strava  = 265;
     const actigraphcorp = 5759;
 }
 class MesgCount
