@@ -39,13 +39,13 @@ class ProductProfile
     const DEFAULT_PROTOCOL  = 16;
     const DEFAULT_PROFILE   = 511;
 
-    public $product_profiles = array(
+    public $product_profiles = [
         //protocol_version
-        16 => array(
+        16 => [
             //profile_version
-            511 => array(
+            511 => [
                 'description' => 'Version 511 of the default product profile.',
-                'definition_files' => array(
+                'definition_files' => [
                     //these files are looked up in ./fit_file_types/protocol_16/profile_511
                     'device',
 //                  'settings',
@@ -57,10 +57,11 @@ class ProductProfile
 //                  'weight',
                     'workout',
                     'activity',
-                ),
-            ),
-        ),
-    );
+                    'segment',
+                ],
+            ],
+        ],
+    ];
 
     protected $protocol_version;
     protected $profile_version;
@@ -76,7 +77,7 @@ class ProductProfile
     /**
      * @return int The currently used protocol.
      */
-    public function protocol_version()
+    public function protocol_version(): int
     {
         return $this->protocol_version;
     }
@@ -85,7 +86,7 @@ class ProductProfile
      *
      * @return int The currently used profile.
      */
-    public function profile_version()
+    public function profile_version(): int
     {
         return $this->profile_version;
     }
@@ -94,19 +95,19 @@ class ProductProfile
      * Returns the full definition of the current product profile.
      * @return mixed[]
      */
-    public function definition()
+    public function definition(): array
     {
         return $this->definition;
     }
 
 
     /**
-     * @param int       $filetype
-     * @param int       $global_msg_no
-     * @param int       $field_def_number
+     * @param int $filetype
+     * @param int $global_msg_no
+     * @param int $field_def_number
      * @return mixed[]  Definition of the field or false when not found.
      */
-    public function findFieldDefinition($filetype, $global_msg_no, $field_def_number)
+    public function findFieldDefinition(int $filetype, int $global_msg_no, int $field_def_number)
     {
         foreach ($this->definition as $fitfiletype) {
             if ($fitfiletype['type'] === (int)$filetype) {
@@ -141,10 +142,9 @@ class ProductProfile
      * @param string $name
      * @return mixed[] or null when not found
      */
-    public function findFileTypeByName($name)
+    public function findFileTypeByName(string $name)
     {
         if (
-            is_string($name) &&
             array_key_exists($name, $this->definition)
         ) {
             return $this->definition[$name];
@@ -155,10 +155,10 @@ class ProductProfile
     /**
      * Find the message type by name
      * ie. activity, device, workout, etc
-     * @param string $name
+     * @param string $type
      * @return mixed[] or null when not found
      */
-    public function findFileTypeByType($type)
+    public function findFileTypeByType(string $type)
     {
         $ref = new \ReflectionClass('\Fit\FileType');
         $constants = $ref->getConstants();
@@ -167,19 +167,19 @@ class ProductProfile
 
     /**
      *
-     * @param int       $protocol
-     * @param int       $profile
+     * @param int $protocol
+     * @param int $profile
      * @return boolean  True when name and version are valid, false when not.
      */
-    public function setProtocolAndProfile($protocol, $profile)
+    public function setProtocolAndProfile(int $protocol, int $profile): bool
     {
         if (
-            array_key_exists((int)$protocol, $this->product_profiles) &&
-            array_key_exists((int)$profile, $this->product_profiles[$protocol])
+            array_key_exists($protocol, $this->product_profiles) &&
+            array_key_exists($profile, $this->product_profiles[$protocol])
         ) {
-            $this->protocol_version = (int)$protocol;
-            $this->profile_version  = (int)$profile;
-            $this->definition       = array();
+            $this->protocol_version = $protocol;
+            $this->profile_version  = $profile;
+            $this->definition       = [];
             foreach ($this->product_profiles[$protocol][$profile]['definition_files'] as $filename) {
                 $this->definition[$filename] = require __DIR__ . '/fit_file_types/protocol_' . $this->protocol_version . '/profile_' . $this->profile_version . '/' . $filename . '.php';
             }
