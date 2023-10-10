@@ -481,3 +481,18 @@ class SelectionType
     const starred = 0;
     const suggested = 1;
 }
+
+class LeaderboardType
+{
+    const overall = 0;
+    const personalBest = 1;
+    const connections = 2;
+    const group = 3;
+    const challenger = 4;
+    const kom = 5;
+    const qom = 6;
+    const pr = 7;
+    const goal = 8;
+    const rival = 9;
+    const clubLeader = 10;
+}
