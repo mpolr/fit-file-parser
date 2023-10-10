@@ -245,7 +245,9 @@ class FileType
     const blood_pressure = 14;  // Read only. Directory=Blood Pressure
     const monitoring = 15;  // Read only. Directory=Monitoring
     const activity_summary = 20;    // Read/erase, multiple files. Directory=Activities
-    const monitoring_daily = 2;
+    const monitoring_daily = 28;
+    const segment = 34;     // Read/write/erase. Multiple Files. Directory=Segments
+    const segment_list = 35;     // Read/write/erase. Single File. Directory=Segments
 }
 class Goal
 {
@@ -410,6 +412,11 @@ class MesgNum
     const pad  = 105;
     const slave_device  = 106;
     const cadence_zone  = 131;
+    const segment_lap  = 142;
+    const segment_id  = 148;
+    const segment_leaderboard_entry  = 149;
+    const segment_point  = 150;
+    const segment_file  = 151;
 }
 class Schedule
 {
@@ -466,4 +473,10 @@ class TimerTrigger
     const manual = 0;
     const auto = 1;
     const fitness_equipment = 2;
+}
+
+class SelectionType
+{
+    const starred = 0;
+    const suggested = 1;
 }

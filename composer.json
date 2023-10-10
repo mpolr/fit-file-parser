@@ -1,5 +1,5 @@
 {
-    "name": "dodo-bv/fit-file-parser",
+    "name": "mpolr/fit-file-parser",
     "description": "Tools to view and parse Garmin FIT files.",
     "keywords": ["garmin", "fit"],
     "license": "MIT",
@@ -15,6 +15,10 @@
         {   
             "name": "Stef Nielandt",
             "email": "stef.nielandt@dodo.be"
+        },
+        {
+            "name": "Pavel Monahov",
+            "email": "mpolr21@gmail.com"
         }
     ],
     "require": {
