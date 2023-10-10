@@ -36,10 +36,6 @@ namespace Fit;
  */
 class Reader extends \Fit\Core
 {
-
-    /**
-     * @var \Zend_Io_Reader
-     */
     protected $reader;
 
     /**
@@ -59,24 +55,28 @@ class Reader extends \Fit\Core
      * remain in this variable.
      * @var string[]
      */
-    protected $message_type_definitions = array();
+    protected $message_type_definitions = [];
 
     /**
      * The resulting data after parsing the file.
      * @var string[]
      */
-    public $records = array();
+    public $records = [];
 
     /**
      * The filetype currently being read.
-     * @var enum \Fit\FileType
+     * @var FileType
      */
     protected $file_type;
 
-    public function __construct(IoReader $reader)
+    /**
+     * @throws Zend_Io_Exception
+     */
+    public function __construct(string $filePath)
     {
         parent::__construct(false);
-        $this->reader = $reader;
+        $fd = fopen($filePath, 'r');
+        $this->reader = new Zend_Io_Reader($fd);
     }
 
     /**
@@ -86,11 +86,9 @@ class Reader extends \Fit\Core
      * If not the data will still be read, but we won't know what it is, what
      * scale factor to apply and what unit it is.
      *
-     * @param string $filepath Absolute path to the .FIT file
-     * @return false When unable to open the file for reading.
-     * @throws \Fit\Exception
+     * @throws Zend_Io_Exception
      */
-    public function parseFile()
+    public function parseFile(): array
     {
         try {
             $this->readFileHeader();
@@ -100,13 +98,15 @@ class Reader extends \Fit\Core
             throw $e;
         }
         $this->reader->close();
+        return $this->records;
     }
 
     /**
      * Every .FIT file starts of with a file header which is parsed here.
      * @return string[] The file header
+     * @throws Zend_Io_Exception
      */
-    protected function readFileHeader()
+    protected function readFileHeader(): array
     {
         $this->file_header = array(
             'header_size'       => $this->reader->readUInt8(),      // FIT_FILE_HDR_SIZE (size of this structure)
@@ -135,7 +135,7 @@ class Reader extends \Fit\Core
      * normal header or compressed timestamp here.
      * @return string[] The record header
      */
-    protected function readRecordHeader()
+    protected function readRecordHeader(): array
     {
         $byte = $this->reader->readUInt8();
         $this->headerbits = integerToBooleanArray($byte);
@@ -164,8 +164,9 @@ class Reader extends \Fit\Core
      * When the current record turns out to be a definition record, we will
      * parse it here.
      * @return string[] The definition of the record
+     * @throws Zend_Io_Exception
      */
-    protected function readRecordDefinition()
+    protected function readRecordDefinition(): array
     {
         $definition = array(
             'reserved'          => $this->reader->readUInt8(),
@@ -208,6 +209,7 @@ class Reader extends \Fit\Core
 
     /**
      * Reads all records in the file.
+     * @throws Zend_Io_Exception
      */
     protected function readRecords()
     {
@@ -218,6 +220,7 @@ class Reader extends \Fit\Core
 
     /**
      * Reads 1 record from the file.
+     * @throws Zend_Io_Exception
      */
     protected function readRecord()
     {
@@ -238,7 +241,7 @@ class Reader extends \Fit\Core
             $big_endian = $def['architecture'] === 1;
             if ($this->file_type === null) {
                 //default filetype, file_id is overal hetzelfde
-                $this->file_type        = \Fit\FileType::activity;
+                $this->file_type        = FileType::activity;
             }
             foreach ($def['fields'] as $field_def) {
                 $profile_field_def = $this->profile->findFieldDefinition(

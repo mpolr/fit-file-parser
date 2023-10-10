@@ -53,7 +53,6 @@ abstract class Core
     const TIME      = 6;
     const POS       = 5;
 
-
     protected static $base_types = array(
         self::ENUM      => array('endian_ability' => false, 'name'  => 'enum',      'bytes' => 1,),
         self::SINT8     => array('endian_ability' => false, 'name'  => 'sint8',     'bytes' => 1,),
@@ -81,7 +80,7 @@ abstract class Core
      * @param int $x
      * @return bool[]
      */
-    public static function inttobar($x)
+    public static function inttobar(int $x): array
     {
         return array_reverse(
             array_map(
@@ -98,11 +97,11 @@ abstract class Core
      * @param bool[] $bs
      * @return int
      */
-    public static function bartoint($bs)
+    public static function bartoint(array $bs): int
     {
         $x = 0;
         for ($i = 0; $i <= sizeOf($bs) - 1; $i++) {
-            if ($bs[$i] == true) {
+            if ($bs[$i]) {
                 $x = $x + pow(2, $i);
             }
         }
@@ -116,13 +115,13 @@ abstract class Core
     protected $debug;
 
     /**
-     * @var \Fit\ProductProfile
+     * @var ProductProfile
      */
     protected $profile;
 
-    public function __construct($debug = false)
+    public function __construct(bool $debug = false)
     {
-        $this->profile  = new \Fit\ProductProfile();
-        $this->debug    = (bool)$debug;
+        $this->profile  = new ProductProfile();
+        $this->debug    = $debug;
     }
 }

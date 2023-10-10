@@ -2,6 +2,8 @@
 
 namespace Fit;
 
+use Zend_Io_Writer;
+
 /**
  * @author Karel Wesseling <karel@swc.nl>
  * @version 1.0
@@ -34,11 +36,10 @@ namespace Fit;
  * @example examples/create_data.php How to use this class
  * @uses Zend_Io_Writer Binary file parser
  */
-class Writer extends \Fit\Core
+class Writer extends Core
 {
-
     /**
-     * @var \Zend_Io_Writer
+     * @var Zend_Io_Writer
      */
     protected $writer;
     protected $local_msg_types = array();
@@ -46,23 +47,24 @@ class Writer extends \Fit\Core
 
     /**
      * Create a .fit file and write data to it.
-     * @param \Fit\Data $data
+     * @param Data $data
      * @param string $filepath
      * @return string The filepath of the file that was created
-     * @throws \Fit\Exception
+     * @throws Exception
+     * @throws \Zend_Io_Exception
      */
-    public function writeData(\Fit\Data $data, $filepath = false)
+    public function writeData(Data $data, $filepath = false)
     {
         if ($filepath === false) {
             $filepath = tempnam('/tmp', 'fit');
         }
         if (false === $filepath) {
-            \Fit\Exception::create(1001);
+            Exception::create(1001);
         }
         if (false === ($file = @fopen($filepath, 'wb'))) {
-            \Fit\Exception::create(1001);
+            Exception::create(1001);
         }
-        $this->writer = new \Zend_Io_Writer($file);
+        $this->writer = new Zend_Io_Writer($file);
         try {
             $this
                 ->writeFileHeader()
@@ -78,7 +80,8 @@ class Writer extends \Fit\Core
         return $filepath;
     }
 
-    protected function FitCRC_Get16($crc, $byte){
+    protected function FitCRC_Get16($crc, $byte): int
+    {
         $crc_table =[0x0000, 0xCC01, 0xD801, 0x1400, 0xF001, 0x3C00, 0x2800, 0xE401,0xA001, 0x6C00, 0x7800, 0xB401, 0x5000, 0x9C01, 0x8801, 0x4400];
         // compute checksum of lower four bits of byte
         $tmp = $crc_table[$crc & 0xF];
@@ -90,8 +93,12 @@ class Writer extends \Fit\Core
         $crc = $crc ^ $tmp ^ $crc_table[($byte >> 4) & 0xF];
         return $crc;
     }
-    
-    protected function writeFileClosure($filepath) {
+
+    /**
+     * @throws \Zend_Io_Exception
+     */
+    protected function writeFileClosure($filepath): Writer
+    {
         $crc=0;
         //mark current writing position
         $offset = $this->writer->getOffset();
@@ -120,9 +127,10 @@ class Writer extends \Fit\Core
 
     /**
      * Writes the Fit file header to the file.
-     * @return \Fit\Writer
+     * @return Writer
+     * @throws \Zend_Io_Exception
      */
-    protected function writeFileHeader()
+    protected function writeFileHeader(): Writer
     {
         $this->writer->writeUInt8(12);                                      // FIT_FILE_HDR_SIZE (size of this structure)
         $this->writer->writeUInt8($this->profile->protocol_version());      // FIT_PROTOCOL_VERSION
@@ -134,60 +142,58 @@ class Writer extends \Fit\Core
 
     /**
      * Writes a data-record to the file.
-     * @param mixed[] $msg_def
-     * @param mixed[] $message_data
-     * @return \Fit\Writer
+     * @throws \Zend_Io_Exception
      */
-    protected function writeMessageData($msg_def, $message_data)
+    protected function writeMessageData(array $msg_def, array $message_data): Writer
     {
         $local_msg_type = $this->getLocalMsgType($msg_def['global_msg_number']);
         $this->writeRecordHeaderByte($local_msg_type, false);
         //en nu de velddata wegschrijven
         foreach ($msg_def['fields'] as $field_def) {
-            if (isset($message_data[$field_def[\Fit\Field::NAME]])) {
-                $val = $message_data[$field_def[\Fit\Field::NAME]];
+            if (isset($message_data[$field_def[Field::NAME]])) {
+                $val = $message_data[$field_def[Field::NAME]];
             } else {
                 $val = null;
             }
-            if (is_numeric($val) && $field_def[\Fit\Field::FACTOR] > 0) {
-                $val /= $field_def[\Fit\Field::FACTOR];
+            if (is_numeric($val) && $field_def[Field::FACTOR] > 0) {
+                $val /= $field_def[Field::FACTOR];
             }
             $big_endian = $msg_def['architecture'] === 1;
-            switch ($field_def[\Fit\Field::TYPE_NUMBER]) {
-                case \Fit\Core::STRING:
-                    $this->writer->writeString8((string)$val, $field_def[\Fit\Field::SIZE]);
+            switch ($field_def[Field::TYPE_NUMBER]) {
+                case Core::STRING:
+                    $this->writer->writeString8((string)$val, $field_def[Field::SIZE]);
                     break;
-                case \Fit\Core::SINT8:
+                case Core::SINT8:
                     $this->writer->writeInt8($val);
                     break;
-                case \Fit\Core::ENUM:
-                case \Fit\Core::UINT8Z:
-                case \Fit\Core::UINT8:
+                case Core::ENUM:
+                case Core::UINT8Z:
+                case Core::UINT8:
                     $this->writer->writeUInt8($val);
                     break;
-                case \Fit\Core::SINT16:
+                case Core::SINT16:
                     $big_endian ? $this->writer->writeInt16BE($val) : $this->writer->writeInt16LE($val);
                     break;
-                case \Fit\Core::UINT16Z:
-                case \Fit\Core::UINT16:
+                case Core::UINT16Z:
+                case Core::UINT16:
                     $big_endian ? $this->writer->writeUInt16BE($val) : $this->writer->writeUInt16LE($val);
                     break;
-                case \Fit\Core::SINT32:
+                case Core::SINT32:
                     $big_endian ? $this->writer->writeInt32BE($val) : $this->writer->writeInt32LE($val);
                     break;
-                case \Fit\Core::UINT32Z:
-                case \Fit\Core::UINT32:
+                case Core::UINT32Z:
+                case Core::UINT32:
                     $big_endian ? $this->writer->writeUInt32BE($val) : $this->writer->writeUInt32LE($val);
                     break;
-                case \Fit\Core::FLOAT32:
+                case Core::FLOAT32:
                     $big_endian ? $this->writer->writeFloatBE($val) : $this->writer->writeFloatLE($val);
                     break;
-                case \Fit\Core::FLOAT64:
+                case Core::FLOAT64:
                     $big_endian ? $this->writer->writeInt64BE($val) : $this->writer->writeInt64LE($val);
                     break;
-                case \Fit\Core::BYTE:
+                case Core::BYTE:
                 default:
-                    $this->writer->write($val, $field_def[\Fit\Field::SIZE]);
+                    $this->writer->write($val, $field_def[Field::SIZE]);
             }
         }
         return $this;
@@ -195,10 +201,10 @@ class Writer extends \Fit\Core
 
     /**
      * Writes a definition record to file, when necessary (not already written).
-     * @param mixed[] $msg_def The definition of the message.
-     * @return \Fit\Writer
+     * @param array $msg_def The definition of the message.
+     * @throws \Zend_Io_Exception
      */
-    protected function writeMessageDefinition($msg_def)
+    protected function writeMessageDefinition(array $msg_def): Writer
     {
         $local_msg_type = $this->getLocalMsgType($msg_def['global_msg_number'], true);
         if ($local_msg_type !== false) {
@@ -220,14 +226,14 @@ class Writer extends \Fit\Core
 
 
             foreach ($msg_def['fields'] as $field_def) {
-                $this->writer->writeUInt8($field_def[\Fit\Field::DEF_NUMBER]);
-                $this->writer->writeUInt8($field_def[\Fit\Field::SIZE]);
+                $this->writer->writeUInt8($field_def[Field::DEF_NUMBER]);
+                $this->writer->writeUInt8($field_def[Field::SIZE]);
                 $this->writer->writeUInt8(self::bartoint(array_merge(
-                    array_slice(self::inttobar($field_def[\Fit\Field::TYPE_NUMBER]), 0, 5),
+                    array_slice(self::inttobar($field_def[Field::TYPE_NUMBER]), 0, 5),
                     array(
                         false,//reserved
                         false,//reserved
-                        self::$base_types[$field_def[\Fit\Field::TYPE_NUMBER]]['endian_ability'],//endian_ability: 0 - for single byte data 1 - if base type has endianness (i.e. base type is 2 or more bytes)
+                        self::$base_types[$field_def[Field::TYPE_NUMBER]]['endian_ability'],//endian_ability: 0 - for single byte data 1 - if base type has endianness (i.e. base type is 2 or more bytes)
                     )
                 )));
             }
@@ -240,12 +246,10 @@ class Writer extends \Fit\Core
      * definition needs to be written before a datarecord is, but it only needs
      * to be written once.
      *
-     * @param int $global_msg_no
-     * @param bool $for_definition
      * @return int The local message type or false when the request if for a
      * definition record.
      */
-    protected function getLocalMsgType($global_msg_no, $for_definition = false)
+    protected function getLocalMsgType(int $global_msg_no, bool $for_definition = false)
     {
         $local_msg_type = array_search($global_msg_no, $this->local_msg_types);
         if ($local_msg_type === false) {
@@ -257,13 +261,9 @@ class Writer extends \Fit\Core
     }
 
     /**
-     *
-     * @param int $local_message_type
-     * @param bool $is_definition
-     * @param bool $is_normal_header
-     * @return \Fit\Writer
+     * @throws \Zend_Io_Exception
      */
-    protected function writeRecordHeaderByte($local_msg_type, $is_definition = false, $is_normal_header = true)
+    protected function writeRecordHeaderByte(int $local_msg_type, bool $is_definition = false, bool $is_normal_header = true): Writer
     {
         //write definition record
         //write definition record header byte
@@ -272,8 +272,8 @@ class Writer extends \Fit\Core
             array(
                 false,  //reserved
                 false,  //reserved
-                (bool)$is_definition,   //Nessage Type, 1: Definition Message, 0: Data Message
-                false === (bool)$is_normal_header,  //Normal Header
+                $is_definition,   // Message Type, 1: Definition Message, 0: Data Message
+                false === $is_normal_header,  //Normal Header
             )
         );
         $this->writer->writeUInt8(self::bartoint($header_bits));
@@ -282,10 +282,11 @@ class Writer extends \Fit\Core
 
     /**
      * Writes the data to the file.
-     * @param \Fit\Data $data The data that needs to be written to the file.
-     * @return \Fit\Writer
+     * @param Data $data The data that needs to be written to the file.
+     * @throws \Zend_Io_Exception
+     * @throws Exception
      */
-    protected function writeTheRecords(\Fit\Data $data)
+    protected function writeTheRecords(Data $data): Writer
     {
         foreach ($data->getData() as $file_type => $messages) {
             $file_type_definition = $this->profile->findFileTypeByType($file_type);
@@ -309,7 +310,7 @@ class Writer extends \Fit\Core
                 }
                 if ($file_id_written === false) {
                     //we always need a file_id
-                    \Fit\Exception::create(
+                    Exception::create(
                         1002,
                         implode(PHP_EOL, array(
                             'Missing file_id in message data. Every file type needs one file_id message.',
