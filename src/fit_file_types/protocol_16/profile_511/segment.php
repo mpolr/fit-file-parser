@@ -20,6 +20,15 @@ return [
             ],
         ],
         [
+            'name'              => 'file_creator',
+            'architecture'      => 0,
+            'global_msg_number' => 49,
+            'fields'        => [
+                ['software_version',   0,      0.01,   '',     \Fit\Core::UINT16   ,2],
+                ['hardware_version',   1,      1,      '',     \Fit\Core::UINT8    ,1],
+            ],
+        ],
+        [
             'name'              => 'segment_id',
             'architecture'      => 0,
             'global_msg_number' => 148,
