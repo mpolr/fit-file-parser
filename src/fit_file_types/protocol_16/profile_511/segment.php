@@ -51,5 +51,17 @@ return [
                 ['end_position_long',   6,      1,      '',     Core::SINT32,   4],
             ],
         ],
+        [
+            'name'              => 'segment_point',
+            'architecture'      => 0,
+            'global_msg_number' => 150,
+            'fields'            => [
+                //      name,   field_def_number, factor, unit, base_type_number, size
+                ['message_index',       254,    1,      '',     Core::UINT16,   2],
+                ['position_lat',        1,      1,      '',     Core::SINT32,   4],
+                ['position_long',       2,      1,      '',     Core::SINT32,   4],
+                ['distance',            3,      0.00001,'km',   Core::UINT32   ,4],
+            ],
+        ],
     ],
 ];
