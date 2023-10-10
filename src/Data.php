@@ -38,49 +38,34 @@ require_once __DIR__ . '/Enums.php';
  */
 class Data
 {
-
-
-    /**
-     * Convert degrees to semicircles.
-     * @param decimal $degrees
-     * @return int
-     */
-
     /**
      * Convert Garmin epoch time to unix timestamp.
-     * @param int $garmin_epoch
-     * @return int
      */
-    public static function timeToUnix($garmin_epoch)
+    public static function timeToUnix(int $garminEpoch): int
     {
-        return $garmin_epoch + mktime(0, 0, 0, 12, 31, 1989);
+        return $garminEpoch + mktime(0, 0, 0, 12, 31, 1989);
     }
 
     /**
      * Convert unix time to Garmin epoch timestamp.
-     * @param int $unixtime
-     * @return int
      */
-    public static function timeToGarminEpoch($unixtime)
+    public static function timeToGarminEpoch(int $unixTime): int
     {
-        return $unixtime - mktime(0, 0, 0, 12, 31, 1989);
+        return $unixTime - mktime(0, 0, 0, 12, 31, 1989);
     }
 
-    private $_store = array();
+    private $_store = [];
 
     private $_filetype;
 
     /**
      * Add a message to the datastore.
-     * @param string $msg_name
-     * @param array $msg_data
-     * @return \Fit\Data
-     * @throws \Fit\Exception
+     * @throws Exception
      */
-    public function add($msg_name, array $msg_data)
+    public function add(string $msg_name, array $msg_data): Data
     {
         if ($this->_filetype === null) {
-            \Fit\Exception::create(1005);
+            Exception::create(1005);
         }
         $msg_name   = (string)$msg_name;
         $msg_found  = false;
@@ -93,35 +78,35 @@ class Data
             }
         }
         if (false === $msg_found) {
-            $this->_store[$this->_filetype][] = array(
+            $this->_store[$this->_filetype][] = [
                 'name' => $msg_name,
-                'data' => array(
+                'data' => [
                     $msg_data
-                ),
-            );
+                ],
+            ];
         }
         return $this;
     }
 
-    public function getData()
+    public function getData(): array
     {
         return $this->_store;
     }
 
     /**
      * Set the filetype for the upcoming messages.
-     * @param enum \Fit\FileType $type
      * @return bool True when a known filetype was set, false when not found.
+     * @throws Exception
      */
-    public function setFile($type)
+    public function setFile(int $type): bool
     {
         $ref = new \ReflectionClass('\Fit\FileType');
         $constants = $ref->getConstants();
-        if (array_search($type, $constants) !== false) {
-            $this->_filetype = (int)$type;
+        if (in_array($type, $constants)) {
+            $this->_filetype = $type;
             $this->_store[$this->_filetype] = array();
             return true;
         }
-        \Fit\Exception::create(1004);
+        Exception::create(1004);
     }
 }
