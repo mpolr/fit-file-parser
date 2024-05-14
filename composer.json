@@ -1,5 +1,5 @@
 {
-    "name": "pthurmond/fit-php",
+    "name": "dodo-bv/fit-file-parser",
     "description": "Tools to view and parse Garmin FIT files.",
     "keywords": ["garmin", "fit"],
     "license": "MIT",
@@ -11,6 +11,10 @@
         {
             "name": "Patrick Thurmond",
             "email": "p_thurmond@yahoo.com"
+        },
+        {   
+            "name": "Stef Nielandt",
+            "email": "stef.nielandt@dodo.be"
         }
     ],
     "require": {

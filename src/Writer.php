@@ -67,7 +67,7 @@ class Writer extends \Fit\Core
             $this
                 ->writeFileHeader()
                 ->writeTheRecords($data)
-                ->writeFileClosure()
+                ->writeFileClosure($filepath)
             ;
         } catch (\Exception $e) {
             $this->writer->close();
@@ -78,21 +78,43 @@ class Writer extends \Fit\Core
         return $filepath;
     }
 
-    /**
-     * Writes the data size to the header and a CRC checksum at the end.
-     * @return \Fit\Writer
-     */
-    protected function writeFileClosure()
-    {
+    protected function FitCRC_Get16($crc, $byte){
+        $crc_table =[0x0000, 0xCC01, 0xD801, 0x1400, 0xF001, 0x3C00, 0x2800, 0xE401,0xA001, 0x6C00, 0x7800, 0xB401, 0x5000, 0x9C01, 0x8801, 0x4400];
+        // compute checksum of lower four bits of byte
+        $tmp = $crc_table[$crc & 0xF];
+        $crc = ($crc >> 4) & 0x0FFF;
+        $crc = $crc ^ $tmp ^ $crc_table[$byte & 0xF];
+        // now compute checksum of upper four bits of byte
+        $tmp = $crc_table[$crc & 0xF];
+        $crc = ($crc >> 4) & 0x0FFF;
+        $crc = $crc ^ $tmp ^ $crc_table[($byte >> 4) & 0xF];
+        return $crc;
+    }
+    
+    protected function writeFileClosure($filepath) {
+        $crc=0;
         //mark current writing position
         $offset = $this->writer->getOffset();
         //move to header and write the size of the data
-        $this->writer->setOffset(4);
-        $data_size = $this->writer->getSize() - 12;
-        $this->writer->writeUInt32LE($data_size);   // Does not include file header or crc.  Little endian format.
+        $this->writer->setOffset(4); //GO TO 4th POSITION TO WRITE IN DATA SIZE
+        $data_size = $this->writer->getSize() - 12; //WAS MINUS 12
+        $this->writer->writeUInt32LE($data_size);	// Does not include file header or crc.  Little endian format.
+            //BEGIN CALCULATE CRC
+            $handle = @fopen($filepath, "r");
+            if ($handle) {
+                while (!feof($handle)) {
+                    $hex = bin2hex(fread ($handle , 1 ));
+                    $byte=hexdec('0x'.$hex);
+                    if ($hex){
+                        $crc = $this->FitCRC_Get16($crc, $byte);
+                    }
+                }
+                fclose($handle);
+            }
+            //END CALCULATE CRC
         //write 2 byte crc check at end of file
-        $this->writer->setOffset($offset);
-        $this->writer->writeUInt16LE(0);
+        $this->writer->setOffset($offset);  //MOVE TO END OF FILE
+        $this->writer->writeUInt16LE($crc); //PUT IN CRC
         return $this;
     }
 
