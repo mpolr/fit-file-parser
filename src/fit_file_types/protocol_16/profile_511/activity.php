@@ -110,6 +110,8 @@ return array(
             'fields'            => array(
                 //      name,   field_def_number, factor, unit, base_type_number, size
                 array('timestamp',          253,    1,      '',     \Fit\Core::TIME     ,4),
+                array('position_lat',       0,      1,      '',     \FiT\CORE::UINT32   ,4),
+                array('position_long',      1,      1,      '',     \FiT\CORE::UINT32   ,4),
                 array('heart_rate',         3,      1,      'bpm',  \Fit\Core::UINT8    ,1),
                 array('cadence',            4,      1,      '',     \Fit\Core::UINT8    ,1),
                 array('distance',           5,      0.00001,'km',   \Fit\Core::UINT32   ,4),
